@@ -39,3 +39,4 @@ bootloader:
   ; padding to make bootloader 512 bytes
   times 510-($-$$) db 0
   dw 0xAA55
+
