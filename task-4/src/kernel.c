@@ -485,9 +485,6 @@ void clearScreen() {
 
   interrupt(0x10, 0x02 << 8 | 0x00, 0, 0, 0);
 
-  cursorCol = 0;
-  cursorRow = 0;
-
   updateCursorPos();
 }
 
