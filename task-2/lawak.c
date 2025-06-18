@@ -1,4 +1,3 @@
-```
 #define FUSE_USE_VERSION 28
 #include <dirent.h>
 #include <errno.h>
@@ -374,4 +373,3 @@ int main(int argc, char *argv[]) {
 }
 
 // buat var/log/lawakfs.log dibuat manual, lalu kasih chown 1000:1000
-```
