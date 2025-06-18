@@ -340,11 +340,6 @@ void mkdir_mountpoint(const char *dir) {
 }
 
 int main(int argc, char *argv[]) {
-  if (argc < 3) {
-    fprintf(stderr, "Usage: %s <mountpoint> <source_dir>\n", argv[0]);
-    exit(1);
-  }
-
   source_dir = "/home/ubuntu/filelawakfs"; //source dir masing-masing 
   size_t len = strlen(source_dir);
   if (len > 1 && source_dir[len - 1] == '/') {
@@ -353,7 +348,6 @@ int main(int argc, char *argv[]) {
     source_dir = clean_path;
   }
 
-  mkdir_mountpoint(argv[1]);
   umask(0);
   read_config();
 
