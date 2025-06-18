@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "base64.h"
 
 static const char *source_dir = NULL; 
 char secret_file[100] = "secret";
@@ -29,12 +28,14 @@ int blocking_secret(const char *path) {
     int hour = tm_info->tm_hour;
 
     const char *filename = strrchr(path, '/');
-    filename = filename? filename+1 : path;
+    filename = filename ? filename + 1 : path;
 
-    if (strncmp(filename, secret_file, strlen(secret_file))==0) {
-        if (hour < access_start_hour || hour >= access_end_hour) return 1;
+    if (strncmp(filename, secret_file, strlen(secret_file)) == 0 &&
+        (filename[strlen(secret_file)] == '\0' || filename[strlen(secret_file)] == '.')) {
+        if (hour < access_start_hour || hour >= access_end_hour)
+            return 1; 
     }
-    return 0;
+    return 0;  
 }
 
 char *filtered_words[100];
@@ -331,17 +332,25 @@ int main(int argc, char *argv[])
     }
 
     source_dir = argv[2];
-
     size_t len = strlen(source_dir);
     if (len > 1 && source_dir[len - 1] == '/') {
-    char *clean_path = strdup(source_dir);
-    clean_path[len - 1] = '\0';
-    source_dir = clean_path;
-}
+        char *clean_path = strdup(source_dir);
+        clean_path[len - 1] = '\0';
+        source_dir = clean_path;
+    }
 
-
-    mkdir_mountpoint(argv[1]); 
+    mkdir_mountpoint(argv[1]);
     umask(0);
     read_config();
-    return fuse_main(argc, argv, &xmp_oper, NULL);
+
+    char *fuse_argv[argc - 1];
+    fuse_argv[0] = argv[0];
+    for (int i = 1; i < argc - 1; i++) {
+        fuse_argv[i] = argv[i];
+    }
+
+    int fuse_argc = argc - 1;
+
+    return fuse_main(fuse_argc, fuse_argv, &xmp_oper, NULL);
 }
+
