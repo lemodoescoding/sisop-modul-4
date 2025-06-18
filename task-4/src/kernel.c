@@ -47,7 +47,8 @@ int main() {
   interrupt(0x10, 0x0100, 0, (0x06 << 8) | 0x07, 0);
 
   clearScreen();
-  printString("LilHabOS - B06\n");
+  printString("LilHabOS - B06");
+  printString("\n");
 
   while (1) {
 
@@ -61,7 +62,6 @@ int main() {
 
     printString("$> ");
     readString(buf);
-    printString("\n");
 
     if (strlen(buf) > 0) {
       // checks for echo
@@ -178,7 +178,6 @@ void handleEcho(char *buf, char *outBuf, bool print) {
   if (hasOpeningQuote == false) {
     if (print == 1) {
       printString("Error: Missing operator\n");
-      updateCursorPos();
     }
 
     return;
@@ -197,7 +196,6 @@ void handleEcho(char *buf, char *outBuf, bool print) {
   if (hadClosingQuote == false) {
     if (print == 1) {
       printString("Error: Missing closing quote\n");
-      updateCursorPos();
     }
 
     return;
@@ -230,7 +228,6 @@ void handleEcho(char *buf, char *outBuf, bool print) {
   if (print) {
     printString(outBuf);
     printString("\n");
-    updateCursorPos();
   }
 }
 
@@ -264,7 +261,6 @@ void handleGrep(char *buf, char *prevBuf, char *outBuf, bool print) {
 
   if (prevBufLen < 1) {
     printString("NULL\n");
-    updateCursorPos();
     return;
   }
 
@@ -282,7 +278,6 @@ void handleGrep(char *buf, char *prevBuf, char *outBuf, bool print) {
   if (keywordLen == 0) {
     if (print == 1) {
       printString("NULL\n");
-      updateCursorPos();
     }
 
     return;
@@ -337,7 +332,6 @@ void handleGrep(char *buf, char *prevBuf, char *outBuf, bool print) {
 
   if (foundAny == false && print == 1) {
     printString("NULL\n");
-    updateCursorPos();
   }
 }
 
@@ -446,8 +440,6 @@ void putChar(char c) {
   if (cursorRow >= SCREEN_HEIGHT) {
     clearScreen();
   }
-
-  updateCursorPos();
 }
 
 void printString(char *str) {
@@ -465,7 +457,6 @@ void printString(char *str) {
     }
 
     i++;
-    updateCursorPos();
   }
 
   updateCursorPos();
@@ -512,7 +503,6 @@ void readString(char *buf) {
     } else {
       buf[i++] = c;
       putChar(c); // Echo character
-      updateCursorPos();
     }
   }
 }
