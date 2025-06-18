@@ -36,7 +36,7 @@ static int checkAccessPerm(const char *path, uid_t uid, gid_t gid) {
       return -EACCES;
   }
 
-  if (strncmp(path, "/private_iwandi/", 15) == 0 ||
+  if (strncmp(path, "/private_irwandi/", 16) == 0 ||
       strcmp(path, "/private_irwandi") == 0) {
     if (uid != 1002)
       return -EACCES;
@@ -50,11 +50,6 @@ static int xmp_getattr(const char *path, struct stat *stbuf) {
   char fpath[PATH_MAX];
 
   sprintf(fpath, "%s%s", source_path, path);
-
-  int accessGrant =
-      checkAccessPerm(path, fuse_get_context()->uid, fuse_get_context()->gid);
-  if (accessGrant != 0)
-    return accessGrant;
 
   res = lstat(fpath, stbuf);
 
@@ -73,11 +68,6 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     sprintf(fpath, "%s", path);
   } else {
     sprintf(fpath, "%s%s", source_path, path);
-
-    int accessGrant =
-        checkAccessPerm(path, fuse_get_context()->uid, fuse_get_context()->gid);
-    if (accessGrant != 0)
-      return accessGrant;
   }
 
   int res = 0;
@@ -161,6 +151,11 @@ static int xmp_open(const char *path, struct fuse_file_info *fi) {
 
   if ((fi->flags & O_ACCMODE) != O_RDONLY)
     return -EACCES;
+
+  int accessGrant =
+      checkAccessPerm(path, fuse_get_context()->uid, fuse_get_context()->gid);
+  if (accessGrant != 0)
+    return accessGrant;
 
   int res = open(fullPath, fi->flags);
   if (res == -1)
