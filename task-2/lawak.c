@@ -219,9 +219,7 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     if (entry->d_name[0] == '.')
       continue;
 
-    if (strncmp(entry->d_name, secret_file, strlen(secret_file)) == 0 &&
-        blocking_secret(entry->d_name))
-      continue;
+    if (strcasestr(entry->d_name, secret_file) && blocking_secret(entry->d_name)) continue;
 
     char display_name[256];
     strncpy(display_name, entry->d_name, sizeof(display_name));
