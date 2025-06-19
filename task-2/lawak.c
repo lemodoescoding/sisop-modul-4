@@ -36,9 +36,7 @@ int blocking_secret(const char *path) {
   const char *filename = strrchr(path, '/');
   filename = filename ? filename + 1 : path;
 
-  if (strncmp(filename, secret_file, strlen(secret_file)) == 0 &&
-      (filename[strlen(secret_file)] == '\0' ||
-       filename[strlen(secret_file)] == '.')) {
+  if (strcasestr(filename, secret_file) != NULL) {
     if (start_time < end_time) {
       if (current_time < start_time || current_time >= end_time) {
         return 1;
