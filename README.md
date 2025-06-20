@@ -278,6 +278,13 @@ int main(int argc, char *argv[]) {
 }
 ```
 
+Menjalankan FUSE
+
+```bash
+gcc -Wall FUSecure.c -o FUSecure `pkg-config fuse --cflags --libs`
+./FUSecure /mnt/securefs -f -o allow_other -d
+```
+
 **- Explanation**
 
 Pertama adalah setup direktori serta pembuatan user, untuk direktori seperti yang dijelaskan di soal diberikan kebebasan untuk memilih source directory sebagai tempat penyimpanan semua file, disini kami memilih untuk menggunakan direktori di `/home/shared_files/` yang di buat melalui command bash. Kemudian untuk mempermudah penyelesaian, di file `FUSecure.c` ditambahkan sebuah konstanta string berisi `/home/shared_files/` yang dijadikan source directory dan langsung digunakan oleh FUSE ketika dijalankan.
