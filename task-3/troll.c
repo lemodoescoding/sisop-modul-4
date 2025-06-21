@@ -19,6 +19,10 @@ const char *ascii_art =
 " /_/    \\___/_/_/  /_/  \\____/_/     /_/\\__/   \\__,_/\\__, /\\__,_/_/_/ /_/  /_/   \\___/|__/|__/\\__,_/_/   \\__,_/  \n"
 "                                                    /____/                                                        \n";
 
+int trigger(){
+    return access(trigger_flag, F_OK) == 0;
+}
+
 static int xmp_getattr(const char *path, struct stat *stbuf){
     memset(stbuf, 0, sizeof(struct stat));
 
@@ -95,10 +99,6 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     return -ENOENT;
 }
 
-int trigger(){
-    return access(trigger_flag, F_OK) == 0;
-}
-
 void trigger_trap(){
     FILE *f = fopen(trigger_flag, "w");
     if (f) fclose(f)
@@ -108,10 +108,15 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     (void) fi;
     (void) offset;
 
-    if (strcmp(path, "/upload.txt") == 0 && !trigger()){
+    uid_t uid = fuse_get_context()->uid;
+    struct passwd *pw = getpwuid(uid);
+    const char *user = pw->pw_name;
+
+    if (strcmp(path, "/upload.txt") == 0 && !trigger() && strcmp(user, "DainTontas") == 0){
         trigger_trap();
         return size;
     }
+
     return -EACCES;
 }
 
