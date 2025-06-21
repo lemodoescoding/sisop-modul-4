@@ -210,7 +210,7 @@ isi baru ke file tersebut melalui `write()`. Modifikasi fungsi `xmp_read` dengan
 
 **Screenshot:**
 
-Isi direktori `/mnt/troll`
+Isi direktori /mnt/troll
 ![](assets/task-3/soalb.png)
 
 Jika yang membuka file very_spicy_info.txt adalah DainTontas
