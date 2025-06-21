@@ -440,6 +440,8 @@ void putChar(char c) {
   if (cursorRow >= SCREEN_HEIGHT) {
     clearScreen();
   }
+
+  updateCursorPos();
 }
 
 void printString(char *str) {
